@@ -260,19 +260,22 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
         try {
             messageNMEA += new String(data);
 
-            int eol = messageNMEA.indexOf(0x0a);
-            if (-1 != eol) {
-                String sentence = messageNMEA.substring(0, eol + 1);
-                messageNMEA = messageNMEA.substring(eol + 1);
+            while (messageNMEA.indexOf(0x0a) != -1) {
 
-//                    Boolean allowed = throttle.tryAcquire();
-//                    if (!allowed) {
-//                        return;
-//                    }
+                int eol = messageNMEA.indexOf(0x0a);
+                if (-1 != eol) {
+                    String sentence = messageNMEA.substring(0, eol + 1);
+                    messageNMEA = messageNMEA.substring(eol + 1);
 
-                callback.receivedData(sentence);
-            } else if (messageNMEA.length() > 128) {
-                throw new Exception("invalid NMEA string");
+                    // Boolean allowed = throttle.tryAcquire();
+                    // if (!allowed) {
+                    // return;
+                    // }
+
+                    callback.receivedData(sentence);
+                } else if (messageNMEA.length() > 128) {
+                    throw new Exception("invalid NMEA string");
+                }
             }
         } catch (Exception exception) {
             updateReadDataError(exception);
