@@ -1,5 +1,7 @@
 package com.viewtrak.plugins.usbserial;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -181,7 +183,7 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
                             openSerial(settings);
                         }
                     }
-                }, new IntentFilter(USB_PERMISSION));
+                }, new IntentFilter(USB_PERMISSION), RECEIVER_EXPORTED);
                 usbManager.requestPermission(driver.getDevice(), usbPermissionIntent);
                 return;
             }
